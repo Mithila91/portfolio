@@ -43,57 +43,76 @@ const Experience = () => {
         <h2 className="sr-only">Experience</h2>
 
         {/* Timeline container */}
-        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-y-16">
+        <div className="relative">
           {/* Center line (only on md+) */}
           <span
             className="hidden md:block absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-border"
             aria-hidden
           />
 
-          {experiences.map((exp, index) => {
-            const isLeft = index % 2 === 0;
-            return (
-              <div
-                key={index}
-                className={
-                  "relative md:col-span-1 " +
-                  (isLeft ? "md:col-start-1" : "md:col-start-2")
-                }
-              >
-                {/* Dot on the center line */}
-                <span
-                  className={
-                    "hidden md:block absolute top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow " +
-                    (isLeft ? "right-[-9px]" : "left-[-9px]")
-                  }
-                  aria-hidden
-                />
-
-                {/* Mobile line & dot on the left */}
-                <span className="md:hidden absolute left-0 top-0 h-full w-px bg-border" aria-hidden />
-                <span className="md:hidden absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow" aria-hidden />
-
-                {/* Entry card with offset from the center line for readability */}
+          {/* Experience items */}
+          <div className="space-y-32 md:space-y-24">
+            {experiences.map((exp, index) => {
+              const isLeft = index % 2 === 0;
+              return (
                 <div
-                  className={
-                    "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur " +
-                    (isLeft ? "md:mr-16 md:text-right" : "md:ml-16")
-                  }
+                  key={index}
+                  className="relative"
                 >
-                  <h3 className="text-xl font-semibold">
-                    {exp.role}
-                    <span className="text-muted-foreground"> · {exp.company}</span>
-                  </h3>
-                  {exp.period && (
-                    <time className="block text-sm text-muted-foreground mt-1">{exp.period}</time>
+                  {/* Dot on the center line */}
+                  <span
+                    className={
+                      "hidden md:block absolute top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow left-1/2 -translate-x-1/2 z-10"
+                    }
+                    aria-hidden
+                  />
+
+                  {/* Mobile line & dot on the left */}
+                  {/* Line above dot (except for first item) */}
+                  {index > 0 && (
+                    <span 
+                      className="md:hidden absolute left-0 top-0 w-px h-6 bg-border z-0" 
+                      aria-hidden 
+                    />
                   )}
-                  {exp.description && (
-                    <p className="mt-3 text-sm leading-6 text-foreground/80">{exp.description}</p>
-                  )}
+                  
+                  {/* Line below dot */}
+                  <span 
+                    className={`md:hidden absolute left-0 w-px bg-border z-0 ${
+                      index === experiences.length - 1 
+                        ? "mt-6 top-0 h-8" 
+                        : "mt-6 top-0 h-16"
+                    }`} 
+                    aria-hidden 
+                  />
+                  
+                  <span className="md:hidden absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-10" aria-hidden />
+
+                  {/* Entry card with offset from the center line for readability */}
+                  <div
+                    className={
+                      "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur pl-10 ml-8 md:pl-6 " +
+                      (isLeft 
+                        ? "md:w-[calc(50%-2rem)] md:mr-auto md:ml-0 md:text-right md:pr-6" 
+                        : "md:w-[calc(50%-2rem)] md:ml-auto md:pl-6"
+                      )
+                    }
+                    >
+                    <h3 className="text-xl font-semibold">
+                      {exp.role}
+                      <span className="text-muted-foreground"> · {exp.company}</span>
+                    </h3>
+                    {exp.period && (
+                      <time className="block text-sm text-muted-foreground mt-1">{exp.period}</time>
+                    )}
+                    {exp.description && (
+                      <p className="mt-3 text-sm leading-6 text-foreground/80">{exp.description}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

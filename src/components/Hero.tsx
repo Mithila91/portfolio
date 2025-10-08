@@ -15,7 +15,7 @@ const Hero = () => {
         </div>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Hi 👋. My name is Alex, and I am a full-stack developer passionate about creating 
+          Hi 👋. My name is Mithila, and I am a full-stack developer passionate about creating 
           beautiful, performant web applications.
         </p>
         
