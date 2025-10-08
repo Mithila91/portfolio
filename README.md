@@ -1,14 +1,15 @@
 # Portfolio Website
 
-A modern, responsive portfolio website built with React and TypeScript, showcasing my projects, experience, and skills.
+A modern, responsive portfolio website built with Next.js and TypeScript, showcasing my projects, experience, and skills.
 
 ## ✨ Features
 
+- **Server-Side Rendering**: Built with Next.js for optimal SEO and performance
 - **Responsive Design**: Optimized for all devices and screen sizes
 - **Modern UI**: Clean and professional design with smooth animations
 - **Dark/Light Mode**: Toggle between themes for better user experience
 - **Interactive Components**: Engaging user interface elements
-- **Fast Performance**: Built with Vite for optimal loading speeds
+- **Fast Performance**: Built with Next.js for optimal loading speeds
 
 ## 🚀 Getting Started
 
@@ -35,12 +36,17 @@ npm install
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. Open your browser and navigate to `http://localhost:3000`
 
 ## 📁 Project Structure
 
 ```
 src/
+├── app/                 # Next.js app directory
+│   ├── globals.css     # Global styles
+│   ├── layout.tsx      # Root layout component
+│   ├── page.tsx        # Home page component
+│   └── providers.tsx   # Context providers
 ├── components/          # Reusable UI components
 │   ├── ui/             # shadcn/ui components
 │   ├── Hero.tsx        # Hero section
@@ -48,7 +54,6 @@ src/
 │   ├── Projects.tsx    # Projects showcase
 │   ├── Experience.tsx  # Work experience
 │   └── Contact.tsx     # Contact information
-├── app/                # Next.js app directory
 ├── hooks/              # Custom React hooks
 └── lib/                # Utility functions
 
@@ -56,9 +61,9 @@ src/
 
 ## 🛠️ Built With
 
+- **[Next.js](https://nextjs.org/)** - React framework with SSR/SSG
 - **[React](https://reactjs.org/)** - Frontend library
 - **[TypeScript](https://www.typescriptlang.org/)** - Type safety
-- **[Vite](https://vitejs.dev/)** - Build tool and dev server
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[shadcn/ui](https://ui.shadcn.com/)** - Beautiful UI components
 - **[Framer Motion](https://www.framer.com/motion/)** - Animation library (if used)
@@ -67,17 +72,18 @@ src/
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- `npm run start` - Start production server
+- `npm run lint` - Run Next.js linter
 - `npm run type-check` - Run TypeScript compiler
 
 ## 🚀 Deployment
 
-This project can be deployed to various platforms:
+This Next.js project can be deployed to various platforms:
 
-- **Vercel**: Connect your GitHub repository for automatic deployments
-- **Netlify**: Drag and drop the `dist` folder after running `npm run build`
-- **GitHub Pages**: Use GitHub Actions for automated deployment
+- **Vercel**: Connect your GitHub repository for automatic deployments (recommended for Next.js)
+- **Netlify**: Connect your GitHub repository for automatic deployments  
+- **Railway**: Connect your GitHub repository for automatic deployments
+- **AWS Amplify**: Connect your GitHub repository for automatic deployments
 
 ## 📱 Responsive Design
 

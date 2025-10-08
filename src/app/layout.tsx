@@ -3,8 +3,8 @@ import "./globals.css";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "Creative Coders Nest",
-  description: "Upgraded to Next.js App Router",
+  title: "Portfolio - Mithila",
+  description: "A modern, responsive portfolio website showcasing my projects, experience, and skills.",
 };
 
 export default function RootLayout({
