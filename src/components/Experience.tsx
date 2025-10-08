@@ -1,42 +1,49 @@
+import { useEffect, useState } from "react";
+import { client, queries } from "@/lib/sanity";
+
 type ExperienceItem = {
+  _id: string;
   role: string;
   company: string;
   period?: string;
   description?: string;
+  order: number;
 };
 
-const experiences: ExperienceItem[] = [
-  {
-    role: "Senior Frontend Engineer",
-    company: "Tech Innovations Inc",
-    period: "2023 — Present",
-    description:
-      "Leading design systems and performance work. Built accessible component libraries and optimized bundle size.",
-  },
-  {
-    role: "Full-Stack Developer",
-    company: "Digital Solutions Co",
-    period: "2021 — 2023",
-    description:
-      "Delivered end‑to‑end features across React, Node, and Postgres. Introduced CI and testing practices.",
-  },
-  {
-    role: "Software Engineer",
-    company: "Creative Labs",
-    period: "2019 — 2021",
-    description:
-      "Shipped data‑heavy dashboards, real‑time updates, and internal tooling with strong DX focus.",
-  },
-  {
-    role: "Junior Developer",
-    company: "StartUp Studio",
-    period: "2017 — 2019",
-    description:
-      "Contributed to core product UI, learned best practices, and supported rapid prototyping.",
-  },
-];
-
 const Experience = () => {
+  const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const data = await client.fetch(queries.experiences);
+        setExperiences(data || []);
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="sr-only">Experience</h2>
+          <div className="space-y-32 md:space-y-24">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-32 bg-card/50 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">

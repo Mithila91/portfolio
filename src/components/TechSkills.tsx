@@ -16,27 +16,72 @@ import {
   SiStripe,
   SiOpenai
 } from "react-icons/si";
+import { useEffect, useState } from "react";
+import { client, queries } from "@/lib/sanity";
+import { IconType } from "react-icons";
 
-const techSkills = [
-  { name: "React", icon: SiReact, color: "#61DAFB" },
-  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
-  { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
-  { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
-  { name: "Python", icon: SiPython, color: "#3776AB" },
-  { name: "PostgreSQL", icon: SiPostgresql, color: "#336791" },
-  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
-  { name: "Git", icon: SiGit, color: "#F05032" },
-  { name: "Docker", icon: SiDocker, color: "#2496ED" },
-  { name: "AWS", icon: SiAmazon, color: "#FF9900" },
-  { name: "Vue.js", icon: SiVuedotjs, color: "#4FC08D" },
-  { name: "Supabase", icon: SiSupabase, color: "#3ECF8E" },
-  { name: "Stripe", icon: SiStripe, color: "#635BFF" },
-  { name: "OpenAI", icon: SiOpenai, color: "#412991" },
-];
+// Tech skill type from Sanity
+interface TechSkill {
+  _id: string;
+  name: string;
+  icon: string;
+  category?: string;
+  proficiency?: string;
+  order: number;
+}
+
+// Icon mapping for dynamic icons
+const iconMapping: { [key: string]: IconType } = {
+  "SiReact": SiReact,
+  "SiNextdotjs": SiNextdotjs,
+  "SiTypescript": SiTypescript,
+  "SiJavascript": SiJavascript,
+  "SiNodedotjs": SiNodedotjs,
+  "SiPython": SiPython,
+  "SiPostgresql": SiPostgresql,
+  "SiMongodb": SiMongodb,
+  "SiTailwindcss": SiTailwindcss,
+  "SiGit": SiGit,
+  "SiDocker": SiDocker,
+  "SiAmazon": SiAmazon,
+  "SiVuedotjs": SiVuedotjs,
+  "SiSupabase": SiSupabase,
+  "SiStripe": SiStripe,
+  "SiOpenai": SiOpenai,
+};
 
 const TechSkills = () => {
+  const [techSkills, setTechSkills] = useState<TechSkill[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTechSkills = async () => {
+      try {
+        const data = await client.fetch(queries.techSkills);
+        setTechSkills(data || []);
+      } catch (error) {
+        console.error('Error fetching tech skills:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTechSkills();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Technologies I Work With</h2>
+          <div className="flex justify-center">
+            <div className="animate-pulse bg-card/50 h-16 w-full max-w-4xl rounded-lg"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 px-4 bg-muted/30">
       <div className="max-w-6xl mx-auto">
@@ -47,31 +92,47 @@ const TechSkills = () => {
         <div className="relative overflow-hidden">
           <div className="flex animate-scroll space-x-8">
             {/* First set of skills */}
-            {techSkills.map((tech, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center min-w-[120px] p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-110 group"
-              >
-                <tech.icon 
-                  className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110" 
-                  style={{ color: tech.color }}
-                />
-                <span className="text-sm font-medium text-center">{tech.name}</span>
-              </div>
-            ))}
+            {techSkills.map((tech, index) => {
+              const IconComponent = iconMapping[tech.icon];
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col items-center min-w-[120px] p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-110 group"
+                >
+                  {IconComponent ? (
+                    <IconComponent 
+                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110 text-primary" 
+                    />
+                  ) : (
+                    <div className="w-12 h-12 mb-3 bg-primary/20 rounded-lg flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{tech.name.charAt(0)}</span>
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-center">{tech.name}</span>
+                </div>
+              );
+            })}
             {/* Duplicate for seamless loop */}
-            {techSkills.map((tech, index) => (
-              <div
-                key={`duplicate-${index}`}
-                className="flex flex-col items-center min-w-[120px] p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-110 group"
-              >
-                <tech.icon 
-                  className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110" 
-                  style={{ color: tech.color }}
-                />
-                <span className="text-sm font-medium text-center">{tech.name}</span>
-              </div>
-            ))}
+            {techSkills.map((tech, index) => {
+              const IconComponent = iconMapping[tech.icon];
+              return (
+                <div
+                  key={`duplicate-${index}`}
+                  className="flex flex-col items-center min-w-[120px] p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-110 group"
+                >
+                  {IconComponent ? (
+                    <IconComponent 
+                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110 text-primary" 
+                    />
+                  ) : (
+                    <div className="w-12 h-12 mb-3 bg-primary/20 rounded-lg flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{tech.name.charAt(0)}</span>
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-center">{tech.name}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
