@@ -31,7 +31,7 @@ const Experience = () => {
 
   if (loading) {
     return (
-      <section className="py-20 px-4">
+      <section className="">
         <div className="max-w-6xl mx-auto">
           <h2 className="sr-only">Experience</h2>
           <div className="space-y-32 md:space-y-24">
@@ -45,7 +45,7 @@ const Experience = () => {
   }
 
   return (
-    <section className="py-20 px-4">
+    <section className="">
       <div className="max-w-6xl mx-auto">
         <h2 className="sr-only">Experience</h2>
 
@@ -98,14 +98,14 @@ const Experience = () => {
                   {/* Entry card with offset from the center line for readability */}
                   <div
                     className={
-                      "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur pl-10 ml-8 md:pl-6 " +
+                      "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur pl-10 ml-8 md:pl-6 text-left " +
                       (isLeft 
-                        ? "md:w-[calc(50%-2rem)] md:mr-auto md:ml-0 md:text-right md:pr-6" 
-                        : "md:w-[calc(50%-2rem)] md:ml-auto md:pl-6"
+                        ? "md:w-[calc(50%-2rem)] md:mr-auto md:ml-0 md:pr-8" 
+                        : "md:w-[calc(50%-2rem)] md:ml-auto md:pl-8"
                       )
                     }
                     >
-                    <h3 className="text-xl font-semibold">
+                    <h3 className="text-xl font-semibold leading-tight">
                       {exp.role}
                       <span className="text-muted-foreground"> · {exp.company}</span>
                     </h3>
@@ -113,7 +113,7 @@ const Experience = () => {
                       <time className="block text-sm text-muted-foreground mt-1">{exp.period}</time>
                     )}
                     {exp.description && (
-                      <p className="mt-3 text-sm leading-6 text-foreground/80">{exp.description}</p>
+                      <p className="mt-3 text-sm leading-relaxed text-foreground/80 max-w-none break-words">{exp.description}</p>
                     )}
                   </div>
                 </div>

@@ -75,7 +75,7 @@ const Projects = () => {
 
   if (loading) {
     return (
-      <section className="py-20 px-4">
+      <section className="">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Personal projects</h2>
           <p className="text-muted-foreground text-center mb-12">All projects I've worked on</p>
