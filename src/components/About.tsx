@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { client, queries } from "@/lib/sanity";
 import { useEffect, useState } from "react";
 import { PortableText, PortableTextComponents } from '@portabletext/react';
+import { motion } from "framer-motion";
 
 interface AboutData {
   title: string;
@@ -129,19 +130,43 @@ const About = () => {
   }[textAlign] || 'text-center';
 
   return (
-    <section className={`py-20 px-4 ${backgroundClass}`}>
+    <motion.section 
+      className={`py-20 px-4 ${backgroundClass}`}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
+    >
       <div className={`${maxWidth} mx-auto ${textAlignClass}`}>
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">
+        <motion.h2 
+          className="text-3xl md:text-4xl font-bold mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           {aboutData?.title || "About me"}
-        </h2>
+        </motion.h2>
         
         {aboutData?.subtitle && (
-          <p className="text-lg text-muted-foreground mb-8">
+          <motion.p 
+            className="text-lg text-muted-foreground mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             {aboutData.subtitle}
-          </p>
+          </motion.p>
         )}
         
-        <div className="text-xl md:text-2xl mb-12 leading-relaxed">
+        <motion.div 
+          className="text-xl md:text-2xl mb-12 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
           {aboutData?.content ? (
             <PortableText 
               value={aboutData.content} 
@@ -154,28 +179,41 @@ const About = () => {
               smooth user experiences.
             </p>
           )}
-        </div>
+        </motion.div>
         
         {aboutData?.showSkills && aboutData?.skills && aboutData.skills.length > 0 && (
-          <div className="mb-12">
+          <motion.div 
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <h3 className="text-lg text-muted-foreground mb-6">
               {aboutData.skillsTitle || "Skills & Expertise"}
             </h3>
             <div className="flex flex-wrap justify-center gap-3">
               {aboutData.skills.map((skill, index) => (
-                <Badge 
+                <motion.div
                   key={index}
-                  variant={(skill.color as "default" | "secondary" | "destructive" | "outline") || "secondary"} 
-                  className="text-sm"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: 0.7 + index * 0.05 }}
                 >
-                  {skill.name} - {skill.level}
-                </Badge>
+                  <Badge 
+                    variant={(skill.color as "default" | "secondary" | "destructive" | "outline") || "secondary"} 
+                    className="text-sm"
+                  >
+                    {skill.name} - {skill.level}
+                  </Badge>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
-    </section>
+    </motion.section>
   );
 };
 

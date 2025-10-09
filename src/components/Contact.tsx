@@ -24,14 +24,11 @@ const Contact = () => {
             <Linkedin className="h-5 w-5" />
             LinkedIn
           </Button>
-          <Button variant="outline" size="lg" className="gap-2">
-            <Twitter className="h-5 w-5" />
-            Twitter
-          </Button>
+        
         </div>
         
         <p className="text-sm text-muted-foreground">
-          © 2025 Developer Portfolio. Built with React & Tailwind CSS.
+          © 2025 Developer Portfolio. Built with Next.js, Tailwind CSS & Sanity.io.
         </p>
       </div>
     </section>

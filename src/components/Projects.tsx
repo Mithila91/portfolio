@@ -18,6 +18,7 @@ import {
 import { IconType } from "react-icons";
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
+import { motion } from "framer-motion";
 
 // Project type from Sanity
 interface Project {
@@ -90,27 +91,59 @@ const Projects = () => {
   }
 
   return (
-    <section className="py-20 px-4">
+    <motion.section 
+      className="py-20 px-4"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Personal projects</h2>
-        <p className="text-muted-foreground text-center mb-12">All projects I've worked on</p>
+        <motion.h2 
+          className="text-3xl md:text-4xl font-bold mb-4 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          Personal projects
+        </motion.h2>
+        <motion.p 
+          className="text-muted-foreground text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          All projects I've worked on
+        </motion.p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, index) => {
             const isComingSoon = !project.isReleased;
             
             return (
-              <Card
+              <motion.div
                 key={index}
-                className={`
-                  border-border transition-all duration-300 shadow-card animate-scale-in
-                  ${isComingSoon 
-                    ? 'bg-muted/30 border-muted opacity-70 cursor-not-allowed' 
-                    : 'bg-card hover:border-primary/50 hover:scale-105 cursor-pointer'
-                  }
-                `}
-                style={{ animationDelay: `${index * 0.1}s` }}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: "easeOut"
+                }}
+                whileHover={!isComingSoon ? { scale: 1.05 } : {}}
               >
+                <Card
+                  className={`
+                    border-border transition-all duration-300 shadow-card h-full
+                    ${isComingSoon 
+                      ? 'bg-muted/30 border-muted opacity-70 cursor-not-allowed' 
+                      : 'bg-card hover:border-primary/50 cursor-pointer'
+                    }
+                  `}
+                >
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="outline" className={isComingSoon ? 'text-muted-foreground border-muted-foreground' : ''}>
@@ -196,11 +229,12 @@ const Projects = () => {
                   )}
                 </CardContent>
               </Card>
+            </motion.div>
             );
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

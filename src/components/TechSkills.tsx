@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
 import { IconType } from "react-icons";
+import { motion } from "framer-motion";
 
 // Tech skill type from Sanity
 interface TechSkill {
@@ -83,14 +84,48 @@ const TechSkills = () => {
   }
 
   return (
-    <section className="py-20 px-4 bg-muted/30">
+    <motion.section 
+      className="py-20 px-4 bg-muted/30"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Tech Stack</h2>
-        <p className="text-muted-foreground text-center mb-12">Technologies I work with</p>
+        <motion.h2 
+          className="text-3xl md:text-4xl font-bold mb-4 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          Tech Stack
+        </motion.h2>
+        <motion.p 
+          className="text-muted-foreground text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          Technologies I work with
+        </motion.p>
         
         {/* Rolling/Sliding animation container */}
-        <div className="relative overflow-hidden">
-          <div className="flex animate-scroll space-x-8">
+        <motion.div 
+          className="relative overflow-hidden"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <motion.div 
+            className="flex animate-scroll space-x-8"
+            initial={{ x: -100 }}
+            whileInView={{ x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.8 }}
+          >
             {/* First set of skills */}
             {techSkills.map((tech, index) => {
               const IconComponent = iconMapping[tech.icon];
@@ -133,10 +168,10 @@ const TechSkills = () => {
                 </div>
               );
             })}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
+import { motion } from "framer-motion";
 
 // Hero type from Sanity
 interface HeroData {
@@ -43,32 +44,87 @@ const Hero = () => {
 
   if (loading) {
     return (
-      <section className="min-h-screen flex items-center justify-center px-4 py-20">
+      <motion.section 
+        className="min-h-screen flex items-center justify-center px-4 py-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="max-w-5xl mx-auto text-center">
-          <div className="h-16 bg-card/50 rounded-lg animate-pulse mb-8"></div>
-          <div className="h-24 bg-card/50 rounded-lg animate-pulse mb-8"></div>
-          <div className="h-6 bg-card/50 rounded-lg animate-pulse mb-8"></div>
-          <div className="h-12 bg-card/50 rounded-lg animate-pulse w-48 mx-auto"></div>
+          <motion.div 
+            className="h-16 bg-card/50 rounded-lg animate-pulse mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          />
+          <motion.div 
+            className="h-24 bg-card/50 rounded-lg animate-pulse mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          />
+          <motion.div 
+            className="h-6 bg-card/50 rounded-lg animate-pulse mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          />
+          <motion.div 
+            className="h-12 bg-card/50 rounded-lg animate-pulse w-48 mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          />
         </div>
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 py-20">
-      <div className="max-w-5xl mx-auto text-center animate-fade-in">
-        <div className="mb-8">
+    <motion.section 
+      className="min-h-screen flex items-center justify-center px-4 py-20"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <div className="max-w-5xl mx-auto text-center">
+        <motion.div 
+          className="mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           {heroData?.subtitle && (
-            <h2 className="text-4xl md:text-5xl font-light mb-4 text-foreground">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-light mb-4 text-foreground"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               {heroData.subtitle}
-            </h2>
+            </motion.h2>
           )}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-gradient leading-tight">
+          <motion.h1 
+            className="text-5xl md:text-7xl lg:text-8xl font-bold text-gradient leading-tight"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.8, 
+              delay: 0.6,
+              type: "spring",
+              stiffness: 100
+            }}
+          >
             {heroData?.title || "Full-Stack Developer"}
-          </h1>
-        </div>
+          </motion.h1>
+        </motion.div>
         
-        <div className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+        <motion.div 
+          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
           {heroData?.description ? (
             // Render rich text content - for now just get the plain text
             <p>
@@ -86,18 +142,30 @@ const Hero = () => {
               beautiful, performant web applications.
             </p>
           )}
-        </div>
+        </motion.div>
         
-        <Button 
-          size="lg" 
-          className="gradient-hero text-white hover:opacity-90 transition-opacity shadow-glow"
-          onClick={() => heroData?.contactEmail && window.open(`mailto:${heroData.contactEmail}`, '_blank')}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
         >
-          Let's Build Together
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            <Button 
+              size="lg" 
+              className="gradient-hero text-white hover:opacity-90 transition-opacity shadow-glow"
+              onClick={() => heroData?.contactEmail && window.open(`mailto:${heroData.contactEmail}`, '_blank')}
+            >
+              Let's Build Together
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
