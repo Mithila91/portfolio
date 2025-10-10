@@ -160,52 +160,119 @@ const About = () => {
           </motion.p>
         )}
         
-        <motion.div 
-          className="text-xl md:text-2xl mb-12 leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          {aboutData?.content ? (
-            <PortableText 
-              value={aboutData.content} 
-              components={portableTextComponents}
-            />
-          ) : (
-            <p>
-              I'm a <span className="text-gradient font-semibold">full-stack developer</span> with a strong 
-              focus on developing <span className="text-gradient font-semibold">bug-free</span>, 
-              smooth user experiences.
-            </p>
-          )}
-        </motion.div>
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
+          {/* Left side - Key info cards */}
+          <motion.div 
+            className="space-y-6"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            {/* Quick stats/highlights */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-card border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-primary">5+</div>
+                <div className="text-sm text-muted-foreground">Years Experience</div>
+              </div>
+              <div className="bg-card border rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-primary">50+</div>
+                <div className="text-sm text-muted-foreground">Projects Built</div>
+              </div>
+            </div>
+            
+            {/* Key focus areas */}
+            <div className="space-y-3">
+              <h3 className="font-semibold text-lg">What I Do</h3>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Full-Stack Development</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Modern Web Applications</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Performance Optimization</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">User Experience Design</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Right side - Concise about text */}
+          <motion.div 
+            className="space-y-4"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            {aboutData?.content ? (
+              <div className="text-base leading-relaxed">
+                <PortableText 
+                  value={aboutData.content} 
+                  components={{
+                    ...portableTextComponents,
+                    block: {
+                      normal: ({ children }) => <p className="mb-3 leading-relaxed">{children}</p>,
+                    }
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="space-y-3 text-base leading-relaxed">
+                <p>
+                  I'm a <span className="text-gradient font-semibold">full-stack developer</span> passionate about 
+                  creating <span className="text-gradient font-semibold">beautiful, performant</span> web applications.
+                </p>
+                <p>
+                  I focus on modern technologies and best practices to deliver 
+                  exceptional user experiences that solve real problems.
+                </p>
+              </div>
+            )}
+          </motion.div>
+        </div>
         
         {aboutData?.showSkills && aboutData?.skills && aboutData.skills.length > 0 && (
           <motion.div 
-            className="mb-12"
+            className="text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <h3 className="text-lg text-muted-foreground mb-6">
-              {aboutData.skillsTitle || "Skills & Expertise"}
-            </h3>
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="inline-flex items-center gap-2 mb-6">
+              <div className="w-8 h-px bg-border"></div>
+              <h3 className="text-base font-medium text-muted-foreground">
+                {aboutData.skillsTitle || "Skills & Expertise"}
+              </h3>
+              <div className="w-8 h-px bg-border"></div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
               {aboutData.skills.map((skill, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: 0.7 + index * 0.05 }}
+                  transition={{ duration: 0.4, delay: 0.7 + index * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   <Badge 
                     variant={(skill.color as "default" | "secondary" | "destructive" | "outline") || "secondary"} 
-                    className="text-sm"
+                    className="text-xs px-3 py-1"
                   >
-                    {skill.name} - {skill.level}
+                    {skill.name}
+                    {skill.level && skill.level !== 'intermediate' && (
+                      <span className="ml-1 opacity-60">• {skill.level}</span>
+                    )}
                   </Badge>
                 </motion.div>
               ))}

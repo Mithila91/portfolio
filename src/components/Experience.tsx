@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
 import { motion } from "framer-motion";
+import { Building2, Calendar } from "lucide-react";
 
 type ExperienceItem = {
   _id: string;
@@ -58,7 +59,7 @@ const Experience = () => {
 
   return (
     <motion.section 
-      className=""
+      className="py-20 px-4"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -69,16 +70,41 @@ const Experience = () => {
 
         {/* Timeline container */}
         <div className="relative">
-          {/* Center line (only on md+) */}
-          <motion.span
-            className="hidden md:block absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-border"
+          {/* Center line (only on md+) with progressive animation */}
+          <motion.div
+            className="hidden md:block absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border/30"
+            style={{ height: '100%' }}
             aria-hidden
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ transformOrigin: "top" }}
-          />
+          >
+            <motion.div
+              className="w-full bg-primary/80"
+              initial={{ height: 0 }}
+              whileInView={{ height: '100%' }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ 
+                duration: 2,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
+
+          {/* Mobile timeline line */}
+          <motion.div
+            className="md:hidden absolute left-6 top-0 w-px bg-border/30"
+            style={{ height: '100%' }}
+            aria-hidden
+          >
+            <motion.div
+              className="w-full bg-primary/80"
+              initial={{ height: 0 }}
+              whileInView={{ height: '100%' }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ 
+                duration: 2,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
 
           {/* Experience items */}
           <div className="space-y-32 md:space-y-24">
@@ -97,73 +123,50 @@ const Experience = () => {
                     ease: "easeOut"
                   }}
                 >
-                  {/* Dot on the center line */}
-                  <motion.span
-                    className={
-                      "hidden md:block absolute top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow left-1/2 -translate-x-1/2 z-10"
-                    }
+                  {/* Desktop dot on the center line - perfectly centered */}
+                  <motion.div
+                    className="hidden md:block absolute left-1/2 top-6 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
+                    style={{ 
+                      transform: 'translateX(-50%)'
+                    }}
                     aria-hidden
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ 
-                      duration: 0.5,
-                      delay: index * 0.2 + 0.3,
+                      duration: 0.6,
+                      delay: index * 0.2 + 0.8,
                       type: "spring",
                       stiffness: 200
                     }}
                   />
 
-                  {/* Mobile line & dot on the left */}
-                  {/* Line above dot (except for first item) */}
-                  {index > 0 && (
-                    <motion.span 
-                      className="md:hidden absolute left-0 top-0 w-px h-6 bg-border z-0" 
-                      aria-hidden 
-                      initial={{ scaleY: 0 }}
-                      whileInView={{ scaleY: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      style={{ transformOrigin: "top" }}
-                    />
-                  )}
-                  
-                  {/* Line below dot */}
-                  <motion.span 
-                    className={`md:hidden absolute left-0 w-px bg-border z-0 ${
-                      index === experiences.length - 1 
-                        ? "mt-6 top-0 h-8" 
-                        : "mt-6 top-0 h-16"
-                    }`} 
-                    aria-hidden 
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: index * 0.1 + 0.2 }}
-                    style={{ transformOrigin: "top" }}
-                  />
-                  
-                  <motion.span 
-                    className="md:hidden absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-10" 
+                  {/* Mobile dot on the left timeline */}
+                  <motion.div 
+                    className="md:hidden absolute left-6 top-6 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
+                    style={{ 
+                      transform: 'translateX(-50%)'
+                    }}
                     aria-hidden 
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ 
-                      duration: 0.5,
-                      delay: index * 0.2 + 0.3,
+                      duration: 0.6,
+                      delay: index * 0.2 + 0.8,
                       type: "spring",
                       stiffness: 200
                     }}
                   />
 
-                  {/* Entry card with offset from the center line for readability */}
+                  {/* Entry card with better mobile positioning */}
                   <motion.div
                     className={
-                      "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur pl-10 ml-8 md:pl-6 text-left " +
+                      "rounded-xl border border-border/50 bg-background/40 p-6 shadow-card backdrop-blur text-left " +
+                      "ml-16 mr-4 " + // Mobile: proper spacing from timeline and screen edge
                       (isLeft 
-                        ? "md:w-[calc(50%-2rem)] md:mr-auto md:ml-0 md:pr-8" 
-                        : "md:w-[calc(50%-2rem)] md:ml-auto md:pl-8"
+                        ? "md:w-[calc(50%-3rem)] md:mr-auto md:ml-0 md:pr-8" 
+                        : "md:w-[calc(50%-3rem)] md:ml-auto md:pl-8 md:mr-0"
                       )
                     }
                     whileHover={{ 
@@ -173,37 +176,70 @@ const Experience = () => {
                     }}
                     transition={{ duration: 0.3 }}
                     >
-                    <motion.h3 
-                      className="text-xl font-semibold leading-tight"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: index * 0.2 + 0.5 }}
-                    >
-                      {exp.role}
-                      <span className="text-muted-foreground"> · {exp.company}</span>
-                    </motion.h3>
-                    {exp.period && (
-                      <motion.time 
-                        className="block text-sm text-muted-foreground mt-1"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.2 + 0.6 }}
-                      >
-                        {exp.period}
-                      </motion.time>
-                    )}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="bg-primary/10 p-2 rounded-lg mt-1">
+                          <Building2 className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <motion.h3 
+                            className="text-lg font-semibold leading-tight"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: index * 0.2 + 0.5 }}
+                          >
+                            {exp.role}
+                          </motion.h3>
+                          <motion.p 
+                            className="text-primary font-medium"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: index * 0.2 + 0.6 }}
+                          >
+                            {exp.company}
+                          </motion.p>
+                        </div>
+                      </div>
+                      {exp.period && (
+                        <motion.div 
+                          className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground flex items-center gap-1"
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: index * 0.2 + 0.7 }}
+                        >
+                          <Calendar className="h-3 w-3" />
+                          {exp.period}
+                        </motion.div>
+                      )}
+                    </div>
+                    
+                    {/* Key highlights instead of long description */}
                     {exp.description && (
-                      <motion.p 
-                        className="mt-3 text-sm leading-relaxed text-foreground/80 max-w-none break-words"
+                      <motion.div 
+                        className="space-y-2"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.2 + 0.7 }}
+                        transition={{ duration: 0.6, delay: index * 0.2 + 0.8 }}
                       >
-                        {exp.description}
-                      </motion.p>
+                        {/* Show first 100 characters + key points */}
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                          {exp.description.length > 120 
+                            ? exp.description.substring(0, 120) + "..."
+                            : exp.description
+                          }
+                        </p>
+                        
+                        {/* Show read more for longer descriptions */}
+                        {exp.description.length > 120 && (
+                          <button className="text-xs text-primary hover:underline font-medium">
+                            View details →
+                          </button>
+                        )}
+                      </motion.div>
                     )}
                   </motion.div>
                 </motion.div>
