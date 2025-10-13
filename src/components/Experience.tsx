@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Calendar } from "lucide-react";
 
 type ExperienceItem = {
@@ -15,6 +15,19 @@ type ExperienceItem = {
 const Experience = () => {
   const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -72,8 +85,11 @@ const Experience = () => {
         <div className="relative">
           {/* Center line (only on md+) with progressive animation */}
           <motion.div
-            className="hidden md:block absolute left-1/2 top-0 w-px -translate-x-1/2 bg-border/30"
-            style={{ height: '100%' }}
+            className="hidden md:block absolute left-1/2 top-0 w-0.5 bg-border/30"
+            style={{ 
+              height: '100%',
+              transform: 'translateX(-50%)'
+            }}
             aria-hidden
           >
             <motion.div
@@ -90,8 +106,13 @@ const Experience = () => {
 
           {/* Mobile timeline line */}
           <motion.div
-            className="md:hidden absolute left-6 top-0 w-px bg-border/30"
-            style={{ height: '100%' }}
+            className="md:hidden absolute w-0.5 bg-border/30"
+            style={{ 
+              height: '100%',
+              left: '24px',
+              top: '0',
+              transform: 'translateX(-50%)'
+            }}
             aria-hidden
           >
             <motion.div
@@ -125,8 +146,10 @@ const Experience = () => {
                 >
                   {/* Desktop dot on the center line - perfectly centered */}
                   <motion.div
-                    className="hidden md:block absolute left-1/2 top-6 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
+                    className="hidden md:block absolute h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
                     style={{ 
+                      left: '50%',
+                      top: '24px',
                       transform: 'translateX(-50%)'
                     }}
                     aria-hidden
@@ -143,8 +166,10 @@ const Experience = () => {
 
                   {/* Mobile dot on the left timeline */}
                   <motion.div 
-                    className="md:hidden absolute left-6 top-6 h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
+                    className="md:hidden absolute h-4 w-4 rounded-full bg-primary ring-4 ring-background shadow-glow z-20"
                     style={{ 
+                      left: '24px',
+                      top: '24px',
                       transform: 'translateX(-50%)'
                     }}
                     aria-hidden 
@@ -176,12 +201,12 @@ const Experience = () => {
                     }}
                     transition={{ duration: 0.3 }}
                     >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                       <div className="flex items-start gap-3 flex-1">
                         <div className="bg-primary/10 p-2 rounded-lg mt-1">
                           <Building2 className="h-4 w-4 text-primary" />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <motion.h3 
                             className="text-lg font-semibold leading-tight"
                             initial={{ opacity: 0 }}
@@ -204,7 +229,7 @@ const Experience = () => {
                       </div>
                       {exp.period && (
                         <motion.div 
-                          className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground flex items-center gap-1"
+                          className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground flex items-center gap-1 self-start sm:self-auto"
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           viewport={{ once: true }}
@@ -216,7 +241,7 @@ const Experience = () => {
                       )}
                     </div>
                     
-                    {/* Key highlights instead of long description */}
+                    {/* Key highlights with expandable description */}
                     {exp.description && (
                       <motion.div 
                         className="space-y-2"
@@ -225,19 +250,48 @@ const Experience = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: index * 0.2 + 0.8 }}
                       >
-                        {/* Show first 100 characters + key points */}
-                        <p className="text-sm text-foreground/80 leading-relaxed">
-                          {exp.description.length > 120 
-                            ? exp.description.substring(0, 120) + "..."
-                            : exp.description
-                          }
-                        </p>
+                        {/* Description text with smooth expand/collapse */}
+                        <div className="overflow-hidden">
+                          <AnimatePresence mode="wait">
+                            {expandedItems.has(exp._id) ? (
+                              <motion.p
+                                key="expanded"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="text-sm text-foreground/80 leading-relaxed"
+                              >
+                                {exp.description}
+                              </motion.p>
+                            ) : (
+                              <motion.p
+                                key="collapsed"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="text-sm text-foreground/80 leading-relaxed"
+                              >
+                                {exp.description.length > 120 
+                                  ? exp.description.substring(0, 120) + "..."
+                                  : exp.description
+                                }
+                              </motion.p>
+                            )}
+                          </AnimatePresence>
+                        </div>
                         
-                        {/* Show read more for longer descriptions */}
+                        {/* Toggle button for longer descriptions */}
                         {exp.description.length > 120 && (
-                          <button className="text-xs text-primary hover:underline font-medium">
-                            View details →
-                          </button>
+                          <motion.button 
+                            className="text-xs text-primary hover:underline font-medium transition-colors"
+                            onClick={() => toggleExpanded(exp._id)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            {expandedItems.has(exp._id) ? "Show less ↑" : "View details →"}
+                          </motion.button>
                         )}
                       </motion.div>
                     )}
