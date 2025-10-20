@@ -10,25 +10,44 @@ import {
   SiTailwindcss, 
   SiGit, 
   SiDocker, 
-  SiAmazon,
+  SiAmazonwebservices,
   SiVuedotjs,
   SiSupabase,
   SiStripe,
-  SiOpenai
+  SiOpenai,
+  SiFramer,
+  SiSanity,
+  SiVercel,
+  SiFigma,
+  SiNestjs,
+  SiStorybook,
+  SiShopify,
+  SiNetlify
 } from "react-icons/si";
 import { useEffect, useState } from "react";
 import { client, queries } from "@/lib/sanity";
 import { IconType } from "react-icons";
 import { motion } from "framer-motion";
 
-// Tech skill type from Sanity
-interface TechSkill {
-  _id: string;
+// Updated tech skill types from Sanity
+interface TechSkillItem {
   name: string;
   icon: string;
-  category?: string;
+  color?: string;
   proficiency?: string;
+}
+
+interface TechSkillCategory {
+  name: string;
   order: number;
+  skills: TechSkillItem[];
+}
+
+interface TechSkillData {
+  _id: string;
+  title?: string;
+  subtitle?: string;
+  categories: TechSkillCategory[];
 }
 
 // Icon mapping for dynamic icons
@@ -44,22 +63,30 @@ const iconMapping: { [key: string]: IconType } = {
   "SiTailwindcss": SiTailwindcss,
   "SiGit": SiGit,
   "SiDocker": SiDocker,
-  "SiAmazon": SiAmazon,
+  "SiAmazonwebservices": SiAmazonwebservices,
   "SiVuedotjs": SiVuedotjs,
   "SiSupabase": SiSupabase,
   "SiStripe": SiStripe,
   "SiOpenai": SiOpenai,
+  "SiFramer": SiFramer,
+  "SiSanity": SiSanity,
+  "SiVercel": SiVercel,
+  "SiFigma": SiFigma,
+  "SiNestjs": SiNestjs,
+  "SiStorybook": SiStorybook,
+  "SiShopify": SiShopify,
+  "SiNetlify": SiNetlify,
 };
 
 const TechSkills = () => {
-  const [techSkills, setTechSkills] = useState<TechSkill[]>([]);
+  const [techSkillsData, setTechSkillsData] = useState<TechSkillData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTechSkills = async () => {
       try {
         const data = await client.fetch(queries.techSkills);
-        setTechSkills(data || []);
+        setTechSkillsData(data);
       } catch (error) {
         console.error('Error fetching tech skills:', error);
       } finally {
@@ -69,6 +96,11 @@ const TechSkills = () => {
 
     fetchTechSkills();
   }, []);
+
+  // Flatten all skills from all categories for the scrolling animation
+  const allSkills = techSkillsData?.categories?.flatMap(category => 
+    category.skills || []
+  ) || [];
 
   if (loading) {
     return (
@@ -92,15 +124,21 @@ const TechSkills = () => {
       transition={{ duration: 0.6 }}
     >
       <div className="max-w-6xl mx-auto">
-        <motion.h2 
-          className="text-3xl md:text-4xl font-bold mb-4 text-center"
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Tech Stack
-        </motion.h2>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-12 h-px bg-gradient-to-r from-transparent to-primary/30"></div>
+            <h2 className="text-3xl md:text-4xl font-light tracking-wide">
+              {techSkillsData?.title || "Tech Stack"}
+            </h2>
+            <div className="w-12 h-px bg-gradient-to-l from-transparent to-primary/30"></div>
+          </div>
+        </motion.div>
+ 
         <motion.p 
           className="text-muted-foreground text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
@@ -108,7 +146,7 @@ const TechSkills = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          Technologies I work with
+          {techSkillsData?.subtitle || "Technologies I work with"}
         </motion.p>
         
         {/* Rolling/Sliding animation container */}
@@ -127,7 +165,7 @@ const TechSkills = () => {
             transition={{ duration: 1, delay: 0.8 }}
           >
             {/* First set of skills */}
-            {techSkills.map((tech, index) => {
+            {allSkills.map((tech, index) => {
               const IconComponent = iconMapping[tech.icon];
               return (
                 <div
@@ -136,7 +174,8 @@ const TechSkills = () => {
                 >
                   {IconComponent ? (
                     <IconComponent 
-                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110 text-primary" 
+                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110"
+                      style={{ color: tech.color || 'currentColor' }}
                     />
                   ) : (
                     <div className="w-12 h-12 mb-3 bg-primary/20 rounded-lg flex items-center justify-center">
@@ -148,7 +187,7 @@ const TechSkills = () => {
               );
             })}
             {/* Duplicate for seamless loop */}
-            {techSkills.map((tech, index) => {
+            {allSkills.map((tech, index) => {
               const IconComponent = iconMapping[tech.icon];
               return (
                 <div
@@ -157,7 +196,8 @@ const TechSkills = () => {
                 >
                   {IconComponent ? (
                     <IconComponent 
-                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110 text-primary" 
+                      className="w-12 h-12 mb-3 transition-all duration-300 group-hover:scale-110"
+                      style={{ color: tech.color || 'currentColor' }}
                     />
                   ) : (
                     <div className="w-12 h-12 mb-3 bg-primary/20 rounded-lg flex items-center justify-center">

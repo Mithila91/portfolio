@@ -37,12 +37,19 @@ export const queries = {
   
   about: `*[_type == "about"][0]`,
   
-  techSkills: `*[_type == "techSkill"] | order(order asc) {
+  techSkills: `*[_type == "techSkill"][0] {
     _id,
-    name,
-    icon,
-    category,
-    proficiency,
-    order
+    title,
+    subtitle,
+    categories[] | order(order asc) {
+      name,
+      order,
+      skills[] {
+        name,
+        icon,
+        color,
+        proficiency
+      }
+    }
   }`,
 }

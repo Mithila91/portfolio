@@ -2,7 +2,7 @@ import { experienceType } from './experience'
 import { projectType } from './project'
 import { heroType } from './hero'
 import { aboutType } from './about'
-import { techSkillType } from './techSkill'
+import { techSkillType, techSkillObject } from './techSkill'
 
 export const schemaTypes = [
   experienceType,
@@ -10,4 +10,5 @@ export const schemaTypes = [
   heroType,
   aboutType,
   techSkillType,
+  techSkillObject,
 ]

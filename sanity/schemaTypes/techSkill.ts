@@ -1,9 +1,10 @@
 import { defineType, defineField } from 'sanity'
 
-export const techSkillType = defineType({
-  name: 'techSkill',
-  title: 'Tech Skills',
-  type: 'document',
+// Individual tech skill object type
+const techSkillObject = defineType({
+  name: 'techSkillItem',
+  title: 'Tech Skill Item',
+  type: 'object',
   fields: [
     defineField({
       name: 'name',
@@ -15,23 +16,14 @@ export const techSkillType = defineType({
       name: 'icon',
       title: 'Icon',
       type: 'string',
-      description: 'React Icons name (e.g., "FaReact", "FaNodeJs", "SiTypescript")',
+      description: 'React Icons name (e.g., "SiReact", "SiNodedotjs", "SiTypescript")',
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
+      name: 'color',
+      title: 'Brand Color',
       type: 'string',
-      options: {
-        list: [
-          { title: 'Frontend', value: 'frontend' },
-          { title: 'Backend', value: 'backend' },
-          { title: 'Database', value: 'database' },
-          { title: 'Tools & Platforms', value: 'tools' },
-          { title: 'Mobile', value: 'mobile' },
-          { title: 'Design', value: 'design' },
-        ],
-      },
+      description: 'Hex color for the icon (e.g., "#61DAFB" for React)',
     }),
     defineField({
       name: 'proficiency',
@@ -46,41 +38,102 @@ export const techSkillType = defineType({
         ],
       },
     }),
-    defineField({
-      name: 'order',
-      title: 'Display Order',
-      type: 'number',
-      description: 'Lower numbers appear first in the scrolling list',
-      validation: (rule) => rule.required().min(0),
-    }),
-  ],
-  orderings: [
-    {
-      title: 'Display Order',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
-    {
-      title: 'Category',
-      name: 'categoryOrder',
-      by: [
-        { field: 'category', direction: 'asc' },
-        { field: 'order', direction: 'asc' },
-      ],
-    },
   ],
   preview: {
     select: {
       title: 'name',
-      subtitle: 'category',
-      order: 'order',
+      subtitle: 'proficiency',
+    },
+  },
+})
+
+export const techSkillType = defineType({
+  name: 'techSkill',
+  title: 'Tech Skills',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Section Title',
+      type: 'string',
+      initialValue: 'Tech Stack',
+    }),
+    defineField({
+      name: 'subtitle',
+      title: 'Section Subtitle', 
+      type: 'string',
+      initialValue: 'Technologies I work with',
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Skill Categories',
+      type: 'array',
+      of: [
+        defineField({
+          name: 'category',
+          title: 'Category',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Category Name',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Frontend', value: 'frontend' },
+                  { title: 'Backend', value: 'backend' },
+                  { title: 'Database', value: 'database' },
+                  { title: 'Tools & Platforms', value: 'tools' },
+                  { title: 'Mobile', value: 'mobile' },
+                  { title: 'Design', value: 'design' },
+                ],
+              },
+            }),
+            defineField({
+              name: 'skills',
+              title: 'Technologies',
+              type: 'array',
+              of: [{ type: 'techSkillItem' }],
+            }),
+            defineField({
+              name: 'order',
+              title: 'Display Order',
+              type: 'number',
+              validation: (rule) => rule.required().min(0),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'name',
+              skillCount: 'skills.length',
+              order: 'order',
+            },
+            prepare(selection) {
+              const { title, skillCount, order } = selection
+              return {
+                title: `${order}. ${title}`,
+                subtitle: `${skillCount || 0} technologies`,
+              }
+            },
+          },
+        })
+      ],
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      categoryCount: 'categories.length',
     },
     prepare(selection) {
-      const { title, subtitle, order } = selection
+      const { title, categoryCount } = selection
       return {
-        title: `${order}. ${title}`,
-        subtitle: subtitle,
+        title: title || 'Tech Skills',
+        subtitle: `${categoryCount || 0} categories`,
       }
     },
   },
 })
+
+// Export both types
+export { techSkillObject }

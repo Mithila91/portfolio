@@ -157,4 +157,19 @@ All colors MUST be HSL.
   .animate-scroll:hover {
     animation-play-state: paused;
   }
+  
+  /* Hide scrollbars for carousel */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Infinite scroll animation for tech stack */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 }
